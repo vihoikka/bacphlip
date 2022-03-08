@@ -278,6 +278,8 @@ def parse_cmd_line_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input_file",\
             required=True, help="Should be a valid path to a single genome (nucleotide) FASTA file containing only 1 record/contig.")
+    parser.add_argument("-o", "--output_file",\
+            required=True, help="Full or relative path to output file without extension")
     parser.add_argument("-f", "--force_overwrite", action="store_true",\
             help="Whether to overwrite all existing files that will be created if they exist. Default is False")
     parser.add_argument("--multi_fasta", default=False, action="store_true",\
@@ -291,16 +293,16 @@ def parse_cmd_line_args():
     args = parser.parse_args()    
     return args
 
-def run_pipeline(input_file_path, force_overwrite=False, local_hmmsearch=False):
+def run_pipeline(input_file_path, force_overwrite=False, local_hmmsearch=False, output_file_path):
     """
     Command-line implementation of the full BACPHLIP prediction pipeline. Currently implemented only for single genome
     inputs but lots of time could be saved during the classifier prediction step by implementing a batch option.
     """
     ### 
-    six_frame_file = input_file_path + '.6frame'
-    hmmsearch_file = input_file_path + '.hmmsearch'
-    hmmsearch_df = input_file_path + '.hmmsearch.tsv'
-    predictions_file = input_file_path + '.bacphlip'
+    six_frame_file = output_file_path + '.6frame'
+    hmmsearch_file = output_file_path + '.hmmsearch'
+    hmmsearch_df = output_file_path + '.hmmsearch.tsv'
+    predictions_file = output_file_path + '.bacphlip'
     ###
     print('#################################################################################')
     print('Beginning BACPHLIP pipeline')
