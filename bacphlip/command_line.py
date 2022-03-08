@@ -9,5 +9,5 @@ def main():
     if args.multi_fasta:
         bacphlip.run_pipeline_multi(args.input_file, force_overwrite=args.force_overwrite, local_hmmsearch=args.local_hmmsearch)
     else:
-        bacphlip.run_pipeline(args.input_file, force_overwrite=args.force_overwrite, local_hmmsearch=args.local_hmmsearch)
+        bacphlip.run_pipeline(args.input_file, args.output_file, force_overwrite=args.force_overwrite, local_hmmsearch=args.local_hmmsearch)
 
