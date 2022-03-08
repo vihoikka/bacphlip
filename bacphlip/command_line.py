@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import bacphlip
-import argparse 
+import argparse
 
 def main():
     args = bacphlip.parse_cmd_line_args()
@@ -11,3 +11,6 @@ def main():
     else:
         bacphlip.run_pipeline(args.input_file, args.output_file, force_overwrite=args.force_overwrite, local_hmmsearch=args.local_hmmsearch)
 
+
+if __name__ == "__main__":
+    main()

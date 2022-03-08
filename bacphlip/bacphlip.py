@@ -39,19 +39,19 @@ def check_nonexisting_path(outfile):
     """
     Checks whether a file to be written already  exists and provides an informative message if
     that check fails.
-    
+
     Inputs:
         outfile - path to a hopefully non-existent file file
-    """ 
+    """
     if os.path.exists(outfile):
-        raise Exception("Specified output file ({}) appears to already exist. " 
+        raise Exception("Specified output file ({}) appears to already exist. "
                 "Remove before running program again or specify force_overwrite flag ('-f').".format(outfile))
 
 def check_genome_fasta_reqs(nt_records):
     """
     Checks whether a fasta file (meant to be a genome (i.e. DNA) file) can be read and ensures that it only
     contains one record.
-    
+
     Another check to implement is that the fasta record is of DNA type.
 
     Inputs:
@@ -72,7 +72,7 @@ def check_genome_multifasta_reqs(nt_records):
     """
     Checks whether a fasta file (meant to be a genome (i.e. DNA) file) can be read and ensures that it contains
     more than one record.
-    
+
     Another check to implement is that the fasta record is of DNA type.
 
     Inputs:
@@ -103,8 +103,8 @@ def check_record_id_uniqueness(nt_records):
         raise Exception("Input multi-fasta file appears to contain more than one record with "
                 "the same id (as parsed by biopython 'record.id'. BACPHLIP uses this id to "
                 "write temporary files and will thus error. Please ensure that each record in "
-                "the multi-fasta file is uniquely named before proceeding. Exiting.") 
-    
+                "the multi-fasta file is uniquely named before proceeding. Exiting.")
+
     if len(nt_records) == 1:
         raise Exception("Input fasta file appears to contain a single sequence record."
                 "Please re-run analysis without the '--multi' flag.")
@@ -119,7 +119,7 @@ def six_frame_translate(fasta_file_path, output_file_path, multi_fasta=False, fo
     """
     Reads a genome fasta file and outputs either an amino acid fasta file containing all possible
     six frame translational reading frames that are longer than a set length threshold OR (multi_fasta option)
-    a directory full of fasta files that each contains the six frame translational reading frames for a 
+    a directory full of fasta files that each contains the six frame translational reading frames for a
     given multi-fasta.
 
     Inputs:
@@ -130,12 +130,12 @@ def six_frame_translate(fasta_file_path, output_file_path, multi_fasta=False, fo
         force_overwrite - if True will write "output_file_path" regardless of whether it exists
     """
     check_existing_file(fasta_file_path)
-    ###Read in file    
+    ###Read in file
     nt_records = list(SeqIO.parse(fasta_file_path, format='fasta'))
-    
+
     if not force_overwrite:
         check_nonexisting_path(output_file_path)
-    
+
     if multi_fasta:
         check_genome_multifasta_reqs(nt_records)
         check_record_id_uniqueness(nt_records)
@@ -143,10 +143,10 @@ def six_frame_translate(fasta_file_path, output_file_path, multi_fasta=False, fo
             if force_overwrite:
                 shutil.rmtree(output_file_path)
         os.mkdir(output_file_path)
-    
+
     else:
         check_genome_fasta_reqs(nt_records)
-    
+
     ###Run basic code
     for nt_record in nt_records:
         genome_id = nt_record.id
@@ -189,12 +189,12 @@ def six_frame_translate(fasta_file_path, output_file_path, multi_fasta=False, fo
                 for i, seq in enumerate(prots):
                     outfile.write('>{}_{}\n{}\n'.format(genome_id, i, seq))
             break
-    return    
+    return
 
 def hmmsearch_py(aa_fasta_file, hmmsearch_out, force_overwrite=False, local_hmmsearch=False):
     """
     Runs hmmsearch on an amino acid fasta file against a pre-compiled database of protein domains
-    of interest. 
+    of interest.
 
     Inputs:
         aa_fasta_file - system path to a valid amino acid fasta file
@@ -274,7 +274,7 @@ def predict_lifestyle(hmmsearch_df, predictions_out, force_overwrite=False):
     return
 
 def parse_cmd_line_args():
-    import argparse 
+    import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input_file",\
             required=True, help="Should be a valid path to a single genome (nucleotide) FASTA file containing only 1 record/contig.")
@@ -285,12 +285,12 @@ def parse_cmd_line_args():
     parser.add_argument("--multi_fasta", default=False, action="store_true",\
             help="By default, BACPHLIP assumes that the input file contains one genome (nucleotide) sequence record. "
                     "Users providing a multi_fasta input file must use this flag. Note that each record should be uniquely "
-                    "named and should contain complete genomes for different phages. BACPHLIP should not be run on " 
+                    "named and should contain complete genomes for different phages. BACPHLIP should not be run on "
                     "incomplete / fragmented genomes spanning mulitple records.")
     parser.add_argument("--local_hmmsearch", default=False,\
             help="By default, BACPHLIP assumes a system install of \"hmmsearch\". Use this flag to provide a custom path "
                     "to a local install of hmmsearch if necessary.")
-    args = parser.parse_args()    
+    args = parser.parse_args()
     return args
 
 def run_pipeline(input_file_path,  output_file_path, force_overwrite=False, local_hmmsearch=False):
@@ -298,7 +298,7 @@ def run_pipeline(input_file_path,  output_file_path, force_overwrite=False, loca
     Command-line implementation of the full BACPHLIP prediction pipeline. Currently implemented only for single genome
     inputs but lots of time could be saved during the classifier prediction step by implementing a batch option.
     """
-    ### 
+    ###
     six_frame_file = output_file_path + '.6frame'
     hmmsearch_file = output_file_path + '.hmmsearch'
     hmmsearch_df = output_file_path + '.hmmsearch.tsv'
@@ -326,22 +326,22 @@ def compile_full_hmmsearch_df(output_file, save_dir, force_overwrite):
         ind_df.index = [ind_name]
         full_df = pd.concat((full_df, ind_df))
     full_df.to_csv(output_file, sep='\t')
-    
+
     return
 
-def run_pipeline_multi(input_file_path, output_file_path, force_overwrite=False, local_hmmsearch=False):
+    def run_pipeline_multi(input_file_path, output_file_path, force_overwrite=False, local_hmmsearch=False):
     """
     Command-line implementation of the full BACPHLIP prediction pipeline. Currently implemented only for single genome
     inputs but lots of time could be saved during the classifier prediction step by implementing a batch option.
     """
     #Create a temporary directory for the files to reside
-    output_dir = output_file_path + '.BACPHLIP_DIR/'    
-    
+    output_dir = output_file_path + '.BACPHLIP_DIR/'
+
     print('#################################################################################')
     print('Beginning BACPHLIP pipeline')
     six_frame_translate(input_file_path, output_dir, multi_fasta=True, force_overwrite=force_overwrite)
     print('Finished six frame translation of all nucleotide records with outputs stored in {}'.format(output_dir))
-    
+
     for six_frame_file in glob.glob(output_dir + '*.6frame'):
         indiv_file_path = six_frame_file.split('.6frame')[0]
         #
@@ -351,9 +351,9 @@ def run_pipeline_multi(input_file_path, output_file_path, force_overwrite=False,
         hmmsearch_py(six_frame_file, hmmsearch_file, force_overwrite=force_overwrite, local_hmmsearch=local_hmmsearch)
         #
         process_hmmsearch(hmmsearch_file, hmmsearch_df, force_overwrite=force_overwrite)
-        
+
     print('Finished hmmsearch calls and processing for all records')
-    
+
     all_hmmsearch_file = output_file_path + '.hmmsearch.tsv'
     compile_full_hmmsearch_df(all_hmmsearch_file, output_dir, force_overwrite=force_overwrite)
 
