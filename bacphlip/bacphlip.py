@@ -293,7 +293,7 @@ def parse_cmd_line_args():
     args = parser.parse_args()    
     return args
 
-def run_pipeline(input_file_path, force_overwrite=False, local_hmmsearch=False, output_file_path):
+def run_pipeline(input_file_path,  output_file_path, force_overwrite=False, local_hmmsearch=False):
     """
     Command-line implementation of the full BACPHLIP prediction pipeline. Currently implemented only for single genome
     inputs but lots of time could be saved during the classifier prediction step by implementing a batch option.
