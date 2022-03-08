@@ -329,13 +329,13 @@ def compile_full_hmmsearch_df(output_file, save_dir, force_overwrite):
     
     return
 
-def run_pipeline_multi(input_file_path, force_overwrite=False, local_hmmsearch=False):
+def run_pipeline_multi(input_file_path, output_file_path, force_overwrite=False, local_hmmsearch=False):
     """
     Command-line implementation of the full BACPHLIP prediction pipeline. Currently implemented only for single genome
     inputs but lots of time could be saved during the classifier prediction step by implementing a batch option.
     """
     #Create a temporary directory for the files to reside
-    output_dir = input_file_path + '.BACPHLIP_DIR/'    
+    output_dir = output_file_path + '.BACPHLIP_DIR/'    
     
     print('#################################################################################')
     print('Beginning BACPHLIP pipeline')
@@ -354,10 +354,10 @@ def run_pipeline_multi(input_file_path, force_overwrite=False, local_hmmsearch=F
         
     print('Finished hmmsearch calls and processing for all records')
     
-    all_hmmsearch_file = input_file_path + '.hmmsearch.tsv'
+    all_hmmsearch_file = output_file_path + '.hmmsearch.tsv'
     compile_full_hmmsearch_df(all_hmmsearch_file, output_dir, force_overwrite=force_overwrite)
 
-    predictions_file = input_file_path + '.bacphlip'
+    predictions_file = output_file_path + '.bacphlip'
     predict_lifestyle(all_hmmsearch_file, predictions_file, force_overwrite=force_overwrite)
     print('Finished with BACPHLIP predictions! Final output file stored in {}'.format(predictions_file))
     print('#################################################################################')
