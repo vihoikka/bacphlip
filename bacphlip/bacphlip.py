@@ -329,7 +329,7 @@ def compile_full_hmmsearch_df(output_file, save_dir, force_overwrite):
 
     return
 
-    def run_pipeline_multi(input_file_path, output_file_path, force_overwrite=False, local_hmmsearch=False):
+def run_pipeline_multi(input_file_path, output_file_path, force_overwrite=False, local_hmmsearch=False):
     """
     Command-line implementation of the full BACPHLIP prediction pipeline. Currently implemented only for single genome
     inputs but lots of time could be saved during the classifier prediction step by implementing a batch option.
